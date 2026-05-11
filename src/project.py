@@ -59,8 +59,6 @@ class Flapping_avian():
         if self.dead:
             return
         pygame.draw.rect(screen, self.color, self.player)
-        #self.surface.set_alpha(self.alpha)
-        #surface.blit(self.surface, self.pos)
 
     #Input/player movement
     def detect_input(self):
@@ -74,13 +72,17 @@ class Flapping_avian():
         self.velocity = self.velocity + self.gravity_strength
 
     def update_pos(self, dt):
-        self.gravity(self)
-        self.player.y += self.velocity
+        if self.player.y <= 75 or self.player.y >= 510:
+            self.dead = True
+            print("dead")
+        else:
+            self.gravity(self)
+            self.player.y += self.velocity
         
     def flap(self, dt):
         self.velocity = self.flap_strength
 
-
+#MAIN (INITIALIZE + LOOP)
 def main():
     pygame.init()
     pygame.display.set_caption("Flapping Avian")

@@ -20,6 +20,16 @@ class Flapping_avian():
         self.dead = False
         #PLAYER STATES
         self.flapping = False
+        #~~~~~~~~~~~~~~~~~~~
+        #OBSTACLE STATS
+        self.top = pygame.Rect(250, 300, 15, 15)
+        self.gap = 100
+        self.bottom = pygame.Rect(250, 300, 15, 15)
+        self.obstacle_speed = 5
+        self.obstacle_wait = 20
+        self.obstacles_timer = 0
+        self.obstacles = []
+    
     #Game Loop
     def update (self, dt):
         if self.spawned == False:
@@ -28,6 +38,7 @@ class Flapping_avian():
             self.check_for_start()
         else:
            self.update_player(dt)
+           self.update_obstacles()
 
     def update_player(self, dt):
         self.detect_input()
@@ -38,6 +49,38 @@ class Flapping_avian():
         else:
             self.update_pos(dt)
     
+    #Obstacles
+    def update_obstacles(self):
+        self.obstacles_move()
+        self.obstacles_spawn_new()
+
+    def update_move(self):
+        #update every obstacle in an index
+        #each obstacle should move left some amount
+        #check if obstacle is in player x
+        self.obstacle_collide_x
+        #if so check if player lands within gap
+        self.obstacle_collide_y
+        #if not, kill player
+        #check if an obstacle is off screen
+        self.obstacles_is_offscreen()
+        #delete if offscreen
+        pass
+
+    def obstacle_collide_x():
+        #check if obstacle lands within player's x
+        pass
+
+    def obstacle_collide_y():
+        #check if player lands within gap space of obstacle's y
+        #return boolean
+        pass
+
+    def obstacles_is_offscreen():
+        #check if obstacle is past a certain x value
+        #return a boolean
+        pass
+
     #Game spawn/start
     def spawn_player(self, dt):
         self.spawned = True
@@ -74,7 +117,6 @@ class Flapping_avian():
     def update_pos(self, dt):
         if self.player.y <= 75 or self.player.y >= 510:
             self.dead = True
-            print("dead")
         else:
             self.gravity(self)
             self.player.y += self.velocity

@@ -1,55 +1,83 @@
 import pygame
 import random
 
+class Flapping_avian():
 
-class Player():
-
-    def __init__(self, pos=(100, 100), size=15):
+    def __init__(self, pos = (0,0), size = 15):
+        #GAME STATES
+        self.spawned = False
+        self.start = False
+        #~~~~~~~~~~~~~~~~~~~
+        #PLAYER SURFACE
+        self.player = pygame.Rect(250, 300, 15, 15)
         self.size = size
         self.color = pygame.Color(255, 0, 0)
-        self.alpha = 255
-        self.pos = pos
-        self.velocity = 0
-        self.acceleration = 0
-        self.dead = False
         self.surface = self.update_surface()
+        #self.player_pos = (self.pos_x, self.pos_y)
+        self.velocity = 0
+        self.acceleration = 0.05
+        self.dead = False
+        #PLAYER STATES
+        self.flapping = False
+    #Game Loop
+    def update (self, dt):
+        if self.spawned == False:
+            self.spawn_player(self)
+        elif self.start == False:
+            self.check_for_start()
+        else:
+           self.update_player(dt)
 
+    def update_player(self, dt):
+        self.detect_input()
+        if self.flapping == True:
+            self.flap(self)
+            self.update_pos(dt)
+            self.flapping = False
+        else:
+            self.update_pos(dt)
+    
+    #Game spawn/start
+    def spawn_player(self, dt):
+        self.spawned = True
+        
+    def check_for_start(self):
+        self.detect_input()
+        if self.flapping == True:
+            self.start = True
+            self.velocity = 5
+            print("Bark")
+    
+    #Player visuals
     def update_surface(self):
         surf = pygame.Surface((self.size, self.size))
         surf.fill(self.color)
         return surf
-
-    def draw(self, surface):
+    
+    def draw(self, screen):
         if self.dead:
             return
-        self.surface.set_alpha(self.alpha)
-        surface.blit(self.surface, self.pos)
+        pygame.draw.rect(screen, self.color, self.player)
+        #self.surface.set_alpha(self.alpha)
+        #surface.blit(self.surface, self.pos)
 
-class Flapping_avian():
+    #Input/player movement
+    def detect_input(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            print("meow")
+            self.flapping = True
+            return self.flapping
     
-    def __init__(self, pos):
-        self.pos = pos
-        self.player_size = 15
-        self.does_not_exist = True
-        self.player = Player(self.pos)
+    def gravity(self, dt):
+        self.velocity = self.velocity + self.acceleration
 
-    def update (self, dt):
-        self.spawn_player()
-        self.update_player(dt)
+    def update_pos(self, dt):
+        self.gravity(self)
+        self.player.y += self.velocity
         
-    def update_player(self, dt):
-        #UPDATE PLAYER POSITION
-        return
-
-    def spawn_player(self):
-        if self.does_not_exist:
-            self.does_not_exist = False
-            return self.player
-        return
-    
-    def draw(self, surface):
-        self.player.draw(surface)
-
+    def flap(self, dt):
+        self.velocity = -5
 
 
 def main():
@@ -70,25 +98,8 @@ def main():
         screen.fill(black)
         flapping_avian.draw(screen)
         pygame.display.flip()
-        dt=clock.tick(12)
+        dt=clock.tick(30)
     pygame.quit()
-            
-#Start
-#Game doesn't start until input detected
-
-#Player
-#Add a function to detect input from player
-#Add velocity variable that moves the player
-#Add acceleration variable that alters velocity (gravity)
-#When game detects input from player set velocity to positive value and acceleration back to 0
-
-#Obstacles
-#Add kill floor/ceiling (grab player location, if is outside range player dies.)
-#
-
-
-#Collision
-#
 
 if __name__ == "__main__":
     main()

@@ -95,7 +95,8 @@ class Flapping_avian():
     #Obstacles
     def update_obstacles(self, screen, dt):
         #self.obstacles_move(dt)
-        self.obstacles_spawn_new(screen)
+        #self.obstacles_spawn_new(screen)
+        pass
 
     def obstacles_move(self, dt):
         #update every obstacle in an index

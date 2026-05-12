@@ -39,7 +39,7 @@ class Flapping_avian():
             self.check_for_start()
         else:
            self.update_player(dt)
-           self.update_obstacles(screen)
+           self.update_obstacles(screen, dt)
 
     def update_player(self, dt):
         self.detect_input()
@@ -59,7 +59,6 @@ class Flapping_avian():
         if self.flapping == True:
             self.start = True
             self.velocity = 5
-            print("Bark")
     
     #Player visuals
     def update_surface(self):
@@ -76,7 +75,6 @@ class Flapping_avian():
     def detect_input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE]:
-            print("meow")
             self.flapping = True
             return self.flapping
     
@@ -95,17 +93,17 @@ class Flapping_avian():
 
         
     #Obstacles
-    def update_obstacles(self, screen):
-        #self.obstacles_move()
+    def update_obstacles(self, screen, dt):
+        #self.obstacles_move(dt)
         self.obstacles_spawn_new(screen)
 
-    def update_move(self):
+    def obstacles_move(self, dt):
         #update every obstacle in an index
         #each obstacle should move left some amount
         #check if obstacle is in player x
-        self.obstacle_collide_x
+        self.obstacle_collide_x()
         #if so check if player lands within gap
-        self.obstacle_collide_y
+        self.obstacle_collide_y()
         #if not, kill player
         #check if an obstacle is off screen
         self.obstacles_is_offscreen()
@@ -129,8 +127,10 @@ class Flapping_avian():
     def obstacles_spawn_new(self, screen):
         if self.obstacle_timer_counter >= self.obstacle_timer:
             self.random_height = random.randint(0, self.bottom_size)
-            pygame.draw.rect(screen, (255,0,0), pygame.Rect(0, (-375 + self.random_height), 15, 450))
-            pygame.draw.rect(screen, (255,0,0), pygame.Rect(0, (75 + self.gap + self.random_height), 15, (450 - self.gap)))
+            obstacle_top = pygame.draw.rect(screen, (255,0,0), pygame.Rect(785, (-375 + self.random_height), 15, 450))
+            obstacle_bottom = pygame.draw.rect(screen, (255,0,0), pygame.Rect(785, (75 + self.gap + self.random_height), 15, (450 - self.gap)))
+            self.obstacles.insert(0, obstacle_top)
+            self.obstacles.insert(0, obstacle_bottom)
             self.obstacle_timer_counter = 0
         else:
             self.obstacle_timer_counter += 1
